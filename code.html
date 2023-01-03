@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<head>
+    <title>Spiral sort</title>
+
+    <link rel="stylesheet" href="css/nav.css" type="text/css">
+    <link rel="stylesheet" href="css/footer.css" type="text/css">
+    <link rel="stylesheet" href="css/code.css" type="text/css">
+    <link rel="icon" href="gallery/spiral.png" type="image/x-icon">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/burger.js"></script>
+</head>
+<body>
+    <header class="navigation-bar">
+        <a href="index.html" class="logo"><img src="gallery/logo.png" alt="LOGO" class="logo"></a>
+        
+        <ul class="navigation-links">
+            <li><a href="index.html" class="nav-text">About</a></li>
+            <li><a href="functionality.html" class="nav-text">Functionality</a></li>
+            <li><a href="code.html" class="nav-text">Code</a></li>
+        </ul>
+        
+        <div onclick="location.href='download.html'" class="download-button">Download</div>
+
+        <div class="hamburger" onclick="hamburger_toggle(this)">
+            <div class="line1 line"></div>
+            <div class="line2 line"></div>
+            <div class="line3 line"></div>
+        </div>
+    </header>
+    <div id="top-navigation">
+        <ul class="top-navigation-links">
+            <li><a href="index.html" class="nav-text">About</a></li>
+            <li><a href="functionality.html" class="nav-text">Functionality</a></li>
+            <li><a href="code.html" class="nav-text">Code</a></li>
+            <li><div onclick="location.href='download.html'" class="top-download-button">Download</div></li>
+        </ul>
+    </div>
+    <div class="main">
+        <p>The first step to start implementing this algorithm would be to create a
+        <u>class</u> with the __init__ method which will be using attributes: points, 
+        rotation, start (TODO), and visualize. Then we will assign them to <u>self</u>.</p>
+        <pre class="code-container">
+class spiral_sort():
+    def __init__(self,
+                 points = None,
+                 rotation = None,
+                 start = None,
+                 visualize = False):
+
+        self.points = points
+        self.start = start
+        self.visualize = visualize</pre>
+        <p>For rotation, as mentioned in <a href="functionality.html">Functionality</a>,
+        we will create two new functions within the <u>class</u>. One for <b>"right"</b>
+        and one for <b>"left"</b>. Each of them will look through the dictionaries 
+        (such as {angle: (x, y)}) and get the minimal value (left) or maximal value (right) 
+        of the keys and then return the points assigned to the calculated key.</p>
+        <pre class="code-container">
+class spiral_sort():
+    def __init__(self,
+                 points = None,
+                 rotation = None,
+                 start = None,
+                 visualize = False):
+            
+            self.points = points
+            self.start = start
+            self.visualize = visualize
+            
+            if rotation == "left":
+                self.rotation = self.rotate_left
+            else:
+                self.rotation = self.rotate_right</pre>
+        <br>
+        <pre class="code-container">
+    def rotate_right(self, dict_points_degrees):
+        return dict_points_degrees[max(dict_points_degrees)]
+        
+    def rotate_left(self, dict_points_degrees):
+        return dict_points_degrees[min(dict_points_degrees)]</pre>
+        <p>The idea goes that at the beginning the <u>object</u> is created and then 
+        the <u>sort</u> method is called, which will return a sorted list of given points 
+        (<i>Object.spiral_sort(kwargs).sort() ---> [(x,y), (x,y)]</i>).
+        For visualization, we can add a simple function that will create a <u>tkinter</u> 
+        window with a graphic illustration of a sorted set of points and lines connecting them.</p>
+        <pre class="code-container">
+    def sort(self) -> list:
+        self.create_spiral()
+
+        if self.visualize:
+            self.create_visual()
+
+        return self.sorted_points</pre>
+        <br>
+        <pre class="code-container">
+    def create_visual(self) -> None:
+        import tkinter
+        width = max(self.sorted_points, key=lambda point: point[0])[0]
+        height = max(self.sorted_points, key=lambda point: point[1])[1]
+    
+        canvas = tkinter.Canvas(width = width, height = height)
+        canvas.pack()
+    
+        for point in self.sorted_points:
+            canvas.create_oval(point[0]-3,
+                               point[1]-3,
+                               point[0]+3,
+                               point[1]+3,
+                               width = 0, 
+                               fill = "red")
+    
+        canvas.create_line(tuple(self.sorted_points),
+                           width = 2,
+                           fill = "green")</pre>
+        <p>In the <u>create_visual</u> we set the width to the largest <b>X</b> value 
+        of points and height to the largest <b>Y</b> value of points as there is
+        no need to have a bigger canvas for this illustration (if points have greater distances
+        between themselves it will obviously not work as expected).</p>
+        <br>
+        <p>Now let's create, the most important part, the method which will calculate and 
+        return the points in sorted order.</p>
+        <br>
+        <p id="start">TODO start***</p>
+        <br>
+        <p>(No start implemented) The imaginary point is the <b>X</b> value of the uppermost point 
+        from given points with the <b>Y</b> value being 0 ([X-top-point, 0]).</p>
+        <br>
+        <p>Now that we have our imaginary point at the first (0) position in list <u>final_points</u>
+        and the first point of given points at the second (1) position we can start comparing the angles 
+        created by the <a href="https://stackoverflow.com/a/58956483/12974727">polygonal chain</a> 
+        (always 2 endmost points + new) for each remaining point 
+        (this sample is using clockwise way). We use <u>self.rotation</u> to get desired angle/point.
+        Obtained point is added to the <u>final_points</u> and deleted from <u>self.points</u> for 
+        use in the next cycle. At last, we delete the first point from final_points as it is an imaginary point
+        that does not belong to the spiral. Points in desired order are stored in list <u>self.sorted_points</u>.</p>
+        <pre class="code-container">
+    def create_spiral(self) -> None:
+        if self.start is not None:
+            # TODO
+            first_point = self.start
+        else:
+            first_point = min(self.points, key=lambda point: point[1])
+            final_points = [(first_point[0], 0), first_point]
+
+        del self.points[self.points.index(first_point)]
+
+        for i in range(len(self.points)):
+            angle_point_dict = dict()
+            for point in self.points:
+                x1, y1 = point
+                x2, y2 = final_points[-1]
+                x3, y3 = final_points[-2]
+                angle1 = (360+math.degrees(math.atan2(x1-x2, y1-y2)))%360
+                angle2 = (360+math.degrees(math.atan2(x3-x2, y3-y2)))%360
+                if angle1 <= angle2:
+                    angle_point_dict[angle2 - angle1] = point
+                else:
+                    angle_point_dict[360 - (angle1 - angle2)] = point
+
+            selected_angle = self.rotation(angle_point_dict)
+            final_points.append(selected_angle)
+            del self.points[self.points.index(selected_angle)]
+
+        self.sorted_points = final_points[1:]</pre>
+        <p>You can download the full code in <a href="download.html">Download</a>.</p>
+        <br>
+        <p>You are free to try script <a href="python_implementation/try_spiral.py">try_spiral.py</a> in 
+        <a href="download.html">Download</a> which is a graphical implementation in
+        which you can enter points manually and see them getting sorted by pressing 'a'.</p>
+    </div>
+    <div class="main-bottom main">
+        <h2>You are welcome to contribute your knowledge/observations 
+        and report any mistakes/bugs/upgrades...</h2>
+    </div>
+    <footer>
+        <p>©Dávid Soliar</p>
+    </footer>
+</body>
